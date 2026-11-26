@@ -1,0 +1,228 @@
+identity:
+  name: generate_video
+  author: modelhub-cc
+  label:
+    en_US: Generate Video
+    zh_Hans: 生成视频
+description:
+  human:
+    en_US: Make a Seedance video from a prompt, optionally with reference images, videos and audio, or first/last frames. Waits up to 8 minutes; if it takes longer you get a task ID for Get Video Task.
+    zh_Hans: 根据提示词生成 Seedance 视频，可加参考图、参考视频、参考音频，或首尾帧。最多等待 8 分钟；更久的话会返回任务 ID，用「查询视频任务」取回。
+  llm: Generate a video with Seedance from a text prompt, optionally guided by reference images, reference videos and reference audio, or by a first and last frame. Returns the video file, or a task ID if the video is not ready within 8 minutes.
+parameters:
+  - name: prompt
+    type: string
+    required: true
+    form: llm
+    label:
+      en_US: Prompt
+      zh_Hans: 提示词
+    human_description:
+      en_US: Describe the scene, motion, camera and sound you want.
+      zh_Hans: 描述想要的画面、动作、镜头和声音。
+    llm_description: A detailed description of the video to generate, including subject, action, camera movement and sound.
+  - name: model
+    type: select
+    required: true
+    form: form
+    default: seedance-2.0-mini
+    label:
+      en_US: Model
+      zh_Hans: 模型
+    human_description:
+      en_US: Mini is the cheapest. 2.5 and 2.5 Flash make videos up to 30 seconds and take more references. 2.5 Flash supports 480p and 720p only.
+      zh_Hans: Mini 最便宜。2.5 和 2.5 Flash 最长 30 秒、可用的参考素材更多。2.5 Flash 只支持 480p 和 720p。
+    options:
+      - value: seedance-2.0-mini
+        label:
+          en_US: Seedance 2.0 Mini
+      - value: seedance-2.0-fast
+        label:
+          en_US: Seedance 2.0 Fast
+      - value: seedance-2.0
+        label:
+          en_US: Seedance 2.0
+      - value: seedance-2.5
+        label:
+          en_US: Seedance 2.5
+      - value: seedance-2.5-flash
+        label:
+          en_US: Seedance 2.5 Flash
+  - name: duration
+    type: number
+    required: true
+    form: form
+    default: 5
+    min: 4
+    max: 30
+    label:
+      en_US: Duration (seconds)
+      zh_Hans: 时长（秒）
+    human_description:
+      en_US: 4 to 15 seconds for Seedance 2.0 models, 4 to 30 for Seedance 2.5 and 2.5 Flash. Billed per second; the length of reference videos is billed too.
+      zh_Hans: Seedance 2.0 系列 4～15 秒，Seedance 2.5 / 2.5 Flash 为 4～30 秒。按秒计费，参考视频的时长也会计费。
+  - name: resolution
+    type: select
+    required: true
+    form: form
+    default: 720p
+    label:
+      en_US: Resolution
+      zh_Hans: 分辨率
+    human_description:
+      en_US: Higher resolutions cost more per second.
+      zh_Hans: 分辨率越高，每秒价格越高。
+    options:
+      - value: 480p
+        label:
+          en_US: 480p
+      - value: 720p
+        label:
+          en_US: 720p
+      - value: 1080p
+        label:
+          en_US: 1080p
+  - name: ratio
+    type: select
+    required: false
+    form: llm
+    default: "16:9"
+    label:
+      en_US: Aspect ratio
+      zh_Hans: 画面比例
+    human_description:
+      en_US: Width to height of the video.
+      zh_Hans: 视频的宽高比。
+    llm_description: "Aspect ratio of the video: 16:9 (landscape), 9:16 (vertical), 1:1, 4:3, 3:4 or 21:9."
+    options:
+      - value: "16:9"
+        label:
+          en_US: "16:9"
+      - value: "9:16"
+        label:
+          en_US: "9:16"
+      - value: "1:1"
+        label:
+          en_US: "1:1"
+      - value: "4:3"
+        label:
+          en_US: "4:3"
+      - value: "3:4"
+        label:
+          en_US: "3:4"
+      - value: "21:9"
+        label:
+          en_US: "21:9"
+  - name: reference_images
+    type: files
+    required: false
+    form: llm
+    label:
+      en_US: Reference images
+      zh_Hans: 参考图
+    human_description:
+      en_US: "JPEG, PNG or WebP images (people, products, scenes) for the video to follow. Up to 9 for Seedance 2.0 models, 30 for 2.5, 10 for 2.5 Flash (files and links together)."
+      zh_Hans: JPEG、PNG 或 WebP 图片（人物、产品、场景），视频会参考它们。Seedance 2.0 系列最多 9 张，2.5 最多 30 张，2.5 Flash 最多 10 张（文件和链接合计）。
+    llm_description: Optional reference images (people, products or scenes) for the video to follow.
+  - name: reference_image_urls
+    type: string
+    required: false
+    form: llm
+    label:
+      en_US: Reference image links
+      zh_Hans: 参考图链接
+    human_description:
+      en_US: Public https links to reference images, separated by commas or new lines.
+      zh_Hans: 参考图的公开 https 链接，用逗号或换行分隔。
+    llm_description: Optional public https links to reference images, separated by commas.
+  - name: reference_videos
+    type: files
+    required: false
+    form: llm
+    label:
+      en_US: Reference videos
+      zh_Hans: 参考视频
+    human_description:
+      en_US: "MP4, MOV or WebM clips for motion, camera or style. Up to 3 for Seedance 2.0 models, 10 for 2.5, 5 for 2.5 Flash. Their length is added to the billed seconds."
+      zh_Hans: MP4、MOV 或 WebM 片段，用来参考动作、运镜或风格。Seedance 2.0 系列最多 3 个，2.5 最多 10 个，2.5 Flash 最多 5 个。参考视频的时长会并入计费。
+    llm_description: Optional reference video clips for motion, camera movement or style. Their length is billed in addition to the output length.
+  - name: reference_video_urls
+    type: string
+    required: false
+    form: llm
+    label:
+      en_US: Reference video links
+      zh_Hans: 参考视频链接
+    human_description:
+      en_US: Public https links to reference videos, separated by commas or new lines.
+      zh_Hans: 参考视频的公开 https 链接，用逗号或换行分隔。
+    llm_description: Optional public https links to reference videos, separated by commas.
+  - name: reference_audios
+    type: files
+    required: false
+    form: llm
+    label:
+      en_US: Reference audio
+      zh_Hans: 参考音频
+    human_description:
+      en_US: "MP3, WAV, M4A, AAC, OGG or FLAC files for voice, music or rhythm. Up to 3 for Seedance 2.0 models, 10 for 2.5, 5 for 2.5 Flash."
+      zh_Hans: MP3、WAV、M4A、AAC、OGG 或 FLAC 文件，用来参考音色、配乐或节奏。Seedance 2.0 系列最多 3 个，2.5 最多 10 个，2.5 Flash 最多 5 个。
+    llm_description: Optional reference audio files for voice, music or rhythm.
+  - name: reference_audio_urls
+    type: string
+    required: false
+    form: llm
+    label:
+      en_US: Reference audio links
+      zh_Hans: 参考音频链接
+    human_description:
+      en_US: Public https links to reference audio, separated by commas or new lines.
+      zh_Hans: 参考音频的公开 https 链接，用逗号或换行分隔。
+    llm_description: Optional public https links to reference audio files, separated by commas.
+  - name: first_frame
+    type: file
+    required: false
+    form: llm
+    label:
+      en_US: First frame
+      zh_Hans: 首帧
+    human_description:
+      en_US: Start the video from this image. Cannot be combined with reference images, videos or audio. Without a last frame it is sent as a single reference image.
+      zh_Hans: 视频从这张图开始。不能和参考图、参考视频、参考音频同时使用。不给尾帧时，这张图按一张参考图发送。
+    llm_description: Optional image to use as the first frame of the video. Without a last frame it is sent as a single reference image.
+  - name: last_frame
+    type: file
+    required: false
+    form: llm
+    label:
+      en_US: Last frame
+      zh_Hans: 尾帧
+    human_description:
+      en_US: End the video on this image. Needs a first frame.
+      zh_Hans: 视频以这张图结束。需要同时给首帧。
+    llm_description: Optional image to use as the last frame of the video. Requires a first frame.
+  - name: generate_audio
+    type: boolean
+    required: false
+    form: form
+    default: true
+    label:
+      en_US: Generate audio
+      zh_Hans: 生成声音
+    human_description:
+      en_US: Add sound and speech that match the video. Not used by Seedance 2.5 Flash.
+      zh_Hans: 为视频生成匹配的音效和人声。Seedance 2.5 Flash 不支持此项。
+  - name: wait_for_result
+    type: boolean
+    required: false
+    form: form
+    default: true
+    label:
+      en_US: Wait for the video
+      zh_Hans: 等待出片
+    human_description:
+      en_US: Off returns the task ID right away; fetch the video later with Get Video Task.
+      zh_Hans: 关闭后立即返回任务 ID，稍后用「查询视频任务」取回视频。
+extra:
+  python:
+    source: tools/generate_video.py

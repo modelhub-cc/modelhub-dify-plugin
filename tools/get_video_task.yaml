@@ -1,0 +1,26 @@
+identity:
+  name: get_video_task
+  author: modelhub-cc
+  label:
+    en_US: Get Video Task
+    zh_Hans: 查询视频任务
+description:
+  human:
+    en_US: Check a video task by its ID and get the video once it is ready. Checking is free.
+    zh_Hans: 按任务 ID 查询视频任务，完成后取回视频。查询不收费。
+  llm: Check a ModelHub video task by its task ID and return the video file when it is ready.
+parameters:
+  - name: task_id
+    type: string
+    required: true
+    form: llm
+    label:
+      en_US: Task ID
+      zh_Hans: 任务 ID
+    human_description:
+      en_US: The task ID returned by Generate Video.
+      zh_Hans: 「生成视频」返回的任务 ID。
+    llm_description: The video task ID returned by Generate Video.
+extra:
+  python:
+    source: tools/get_video_task.py

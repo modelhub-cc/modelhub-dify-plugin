@@ -1,0 +1,32 @@
+identity:
+  author: modelhub-cc
+  name: modelhub
+  label:
+    en_US: ModelHub (Seedance Video)
+    zh_Hans: ModelHub（Seedance 视频）
+  description:
+    en_US: Generate Seedance videos through ModelHub, an independent API service not affiliated with ByteDance. Billed per second; failed tasks are not charged.
+    zh_Hans: 通过 ModelHub 生成 Seedance 视频。ModelHub 是独立的 API 服务，与字节跳动没有关联。按秒计费，失败的任务不扣费。
+  icon: icon.svg
+  tags:
+    - videos
+credentials_for_provider:
+  api_key:
+    type: secret-input
+    required: true
+    label:
+      en_US: ModelHub API Key
+      zh_Hans: ModelHub API Key
+    placeholder:
+      en_US: Paste your ModelHub API key (starts with pk_)
+      zh_Hans: 粘贴你的 ModelHub API Key（以 pk_ 开头）
+    help:
+      en_US: Sign up at modelhub.cc, then create a key in the console
+      zh_Hans: 在 modelhub.cc 注册后，到控制台创建 Key
+    url: https://modelhub.cc
+tools:
+  - tools/generate_video.yaml
+  - tools/get_video_task.yaml
+extra:
+  python:
+    source: provider/modelhub.py

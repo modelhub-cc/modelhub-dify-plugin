@@ -1,0 +1,38 @@
+version: 0.0.1
+type: plugin
+author: modelhub-cc
+name: modelhub
+label:
+  en_US: ModelHub (Seedance Video)
+  zh_Hans: ModelHub（Seedance 视频）
+description:
+  en_US: Generate Seedance 2.0 and 2.5 videos from text, reference images, videos and audio, or first/last frames through ModelHub, an independent API service not affiliated with ByteDance. Billed per second; failed tasks are not charged.
+  zh_Hans: 通过 ModelHub 用文字、参考图、参考视频、参考音频或首尾帧生成 Seedance 2.0 / 2.5 视频。ModelHub 是独立的 API 服务，与字节跳动没有关联。按秒计费，失败的任务不扣费。
+icon: icon.svg
+tags:
+  - videos
+repo: https://github.com/modelhub-cc/modelhub-dify-plugin
+contact: lakers202601@163.com
+resource:
+  memory: 536870912
+  permission: {}
+plugins:
+  tools:
+    - provider/modelhub.yaml
+meta:
+  version: 0.0.1
+  arch:
+    - amd64
+    - arm64
+  runner:
+    language: python
+    version: "3.12"
+    entrypoint: main
+  minimum_dify_version: 1.14.0
+created_at: 2026-11-26T11:46:33.087591+08:00
+privacy: PRIVACY.md
+network:
+  domains:
+    - modelhub.cc
+    - media.modelhub.cc
+verified: false
